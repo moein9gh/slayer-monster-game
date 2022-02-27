@@ -13,10 +13,9 @@ var roundNumber int = 0
 func main() {
 	winner := ""
 	startGame()
-	x := 1
+	roundNumber = 0
 	for winner == "" {
 		winner = startNewRound()
-		x++
 	}
 
 	endGame(winner)
@@ -27,7 +26,11 @@ func startGame() {
 }
 
 func startNewRound() (winner string) {
+
+	healValue := 0
+	damageValue := 0
 	roundNumber++
+
 	interaction.PrintRoundNumber(strconv.Itoa(roundNumber))
 
 	isSpecialRound := roundNumber%3 == 0
@@ -40,7 +43,13 @@ func startNewRound() (winner string) {
 
 	interaction.CheckErr(err)
 
-	actions.ExecutePlayerActiton(userAction)
+	actionValue := actions.ExecutePlayerActiton(userAction)
+
+	if userAction == "HEAL" {
+		healValue = actionValue
+	} else {
+		damageValue = actionValue
+	}
 
 	playerHealth, monsterHealth := actions.GetHealth()
 
@@ -50,7 +59,7 @@ func startNewRound() (winner string) {
 		return
 	}
 
-	actions.MonsterAttack()
+	monsterAttDmg := actions.MonsterAttack()
 
 	playerHealth, monsterHealth = actions.GetHealth()
 
@@ -60,7 +69,17 @@ func startNewRound() (winner string) {
 		return
 	}
 
-	interaction.PrintHealth(playerHealth, monsterHealth)
+	roundData := interaction.RoundData{
+		RoundNumber:         roundNumber,
+		Action:              userAction,
+		PlayerAttackDamage:  damageValue,
+		HealValue:           healValue,
+		MonsterAttackDamage: monsterAttDmg,
+		MonsterHealth:       monsterHealth,
+		PlayerHealth:        playerHealth,
+	}
+
+	roundData.LogRound()
 
 	return
 

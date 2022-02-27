@@ -1,46 +1,44 @@
 package actions
 
 import (
-	"fmt"
 	"math/rand"
 	"time"
 )
 
 var randSource = rand.NewSource(time.Now().UnixNano())
 var currentPlayerHealth = MAX_MONSTER_HEALTH
+var currentMonsterHealth = MAX_PLAYER_HEALTH
 
 var randGenerator = rand.New(randSource)
 
-func ExecutePlayerActiton(userChoice string) {
+func ExecutePlayerActiton(userChoice string) (val int) {
 
 	switch userChoice {
 
 	case "ATTACK":
-		PlayerAttack(false)
+		val = PlayerAttack(false)
 
 	case "HEAL":
-		PlayerHeal()
+		val = PlayerHeal()
 
 	case "SPECIAL ATTACK":
-		PlayerAttack(true)
-
+		val = PlayerAttack(true)
 	}
 
+	return
 }
 
-func PlayerAttack(specialAttack bool) {
+func PlayerAttack(specialAttack bool) int {
 
 	minDmg := MIN_PLAYER_ATTACK_HEALTH
 	maxDmg := MAX_PLAYER_ATTACK_HEALTH
 
-	if !specialAttack {
+	if specialAttack {
 		minDmg = MIN_PLAYER_SPECIAL_ATTACK_HEALTH
 		maxDmg = MAX_PLAYER_SPECIAL_ATTACK_HEALTH
 	}
 
 	dmgValue := generateRandNum(minDmg, maxDmg)
-
-	fmt.Println(currentMonsterHealth, dmgValue)
 
 	if currentMonsterHealth-dmgValue < MIN_MONSTER_HEALTH {
 		currentMonsterHealth = MIN_MONSTER_HEALTH
@@ -48,13 +46,28 @@ func PlayerAttack(specialAttack bool) {
 		currentMonsterHealth -= dmgValue
 	}
 
+	return dmgValue
 }
 
-func PlayerHeal() {
+func MonsterAttack() int {
+	minDmg := MIN_MONSTER_ATTACK_HEALTH
+	maxDmg := MAX_MONSTER_ATTACK_HEALTH
+
+	dmgValue := generateRandNum(minDmg, maxDmg)
+
+	if currentPlayerHealth-dmgValue < MIN_PLAYER_HEALTH {
+		currentPlayerHealth = MIN_PLAYER_HEALTH
+	} else {
+		currentPlayerHealth -= dmgValue
+	}
+
+	return dmgValue
+
+}
+
+func PlayerHeal() int {
 
 	healValue := generateRandNum(MIN_PLAYER_HEAL, MAX_PLAYER_HEAL)
-
-	fmt.Println("heal", currentPlayerHealth)
 
 	if currentPlayerHealth+healValue > MAX_PLAYER_HEALTH {
 		currentPlayerHealth = MAX_PLAYER_HEALTH
@@ -62,7 +75,7 @@ func PlayerHeal() {
 		currentPlayerHealth += healValue
 	}
 
-	fmt.Println("heal", currentPlayerHealth)
+	return healValue
 }
 
 func generateRandNum(min int, max int) int {

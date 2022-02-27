@@ -5,6 +5,16 @@ import (
 	"log"
 )
 
+type RoundData struct {
+	RoundNumber         int
+	Action              string
+	PlayerAttackDamage  int
+	HealValue           int
+	MonsterAttackDamage int
+	MonsterHealth       int
+	PlayerHealth        int
+}
+
 func PrintGreeting() {
 	fmt.Println("***************** WELCOME TO SLAYER MONSTER GAME *****************")
 	fmt.Println("************************* GOOD LOCK ******************************")
@@ -42,4 +52,9 @@ func PrintWinner(winner string) {
 
 func PrintHealth(pHealth, mHealth int) {
 	fmt.Printf("\n************ YOUR DAMAGE : %v /////// MONSTER HEALTH : %v ***********\n", pHealth, mHealth)
+}
+
+func (r *RoundData) LogRound() {
+	fmt.Println("***************************** ROUND LOG *****************************")
+	fmt.Printf("\nROUND:%v //// PLAYER_ACTION=%v //// ACTION_DAMAGE=%v //// HEAL_VALUE=%v //// MONSTER_DAMAGE=%v //// PLAYER_HEALTH=%v //// MONSTER_DAMAGE=%v\n", r.RoundNumber, r.Action, r.PlayerAttackDamage, r.HealValue, r.MonsterAttackDamage, r.PlayerHealth, r.MonsterHealth)
 }
