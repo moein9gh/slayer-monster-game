@@ -4,32 +4,33 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/moein9gh/slayer-monster-game/actions"
 	"github.com/moein9gh/slayer-monster-game/interaction"
 )
 
 var roundNumber int = 0
 
 func main() {
-	// winner := ""
+	winner := ""
 	startGame()
 	x := 1
-	for x == 1 {
-		startNewRound()
+	for winner == "" {
+		winner = startNewRound()
 		x++
 	}
+
+	endGame(winner)
 }
 
 func startGame() {
 	interaction.PrintGreeting()
 }
 
-func startNewRound() {
+func startNewRound() (winner string) {
 	roundNumber++
 	interaction.PrintRoundNumber(strconv.Itoa(roundNumber))
 
 	isSpecialRound := roundNumber%3 == 0
-
-	interaction.ShowOptions(isSpecialRound)
 
 	choicenAction, err := interaction.GettingSelection(isSpecialRound)
 
@@ -39,6 +40,32 @@ func startNewRound() {
 
 	interaction.CheckErr(err)
 
-	fmt.Println(userAction)
+	actions.ExecutePlayerActiton(userAction)
 
+	playerHealth, monsterHealth := actions.GetHealth()
+
+	winner = actions.CheckWinner(playerHealth, monsterHealth)
+	if winner != "" {
+		fmt.Println("winner is", winner)
+		return
+	}
+
+	actions.MonsterAttack()
+
+	playerHealth, monsterHealth = actions.GetHealth()
+
+	winner = actions.CheckWinner(playerHealth, monsterHealth)
+	if winner != "" {
+		fmt.Println("winner is", winner)
+		return
+	}
+
+	interaction.PrintHealth(playerHealth, monsterHealth)
+
+	return
+
+}
+
+func endGame(winner string) {
+	interaction.PrintWinner(winner)
 }

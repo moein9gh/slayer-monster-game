@@ -30,3 +30,16 @@ func CheckErr(err error) {
 		log.Fatal("ERROR", err)
 	}
 }
+
+func PrintInvalidData() {
+	fmt.Println("********************** INVALID DATA ENTERED **********************")
+}
+
+func PrintWinner(winner string) {
+	fmt.Println("*******************************************************************")
+	fmt.Printf("**************************** %v won ! *****************************\n", winner)
+}
+
+func PrintHealth(pHealth, mHealth int) {
+	fmt.Printf("\n************ YOUR DAMAGE : %v /////// MONSTER HEALTH : %v ***********\n", pHealth, mHealth)
+}

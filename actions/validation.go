@@ -1,11 +1,10 @@
 package actions
 
-func ValidateUserChoice(choice int) {
-	if choice != 1 {
+import "errors"
 
-	} else if choice != 2 {
-
-	} else if choice != 3 {
-
+func ValidateUserChoice(choice int) (err error) {
+	if choice != 1 && choice != 2 && choice != 3 {
+		err = errors.New("\ninvalid input")
 	}
+	return
 }

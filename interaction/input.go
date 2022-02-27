@@ -3,14 +3,30 @@ package interaction
 import (
 	"errors"
 	"fmt"
+
+	"github.com/moein9gh/slayer-monster-game/actions"
 )
 
 func GettingSelection(isSpecialRound bool) (playerAction int, err error) {
 
-	playerAction = 0
+	emptySelection := -1
 
-	_, err = fmt.Scan(&playerAction)
+	for emptySelection == -1 {
 
+		playerAction = 0
+
+		ShowOptions(isSpecialRound)
+		_, err = fmt.Scan(&playerAction)
+
+		CheckErr(err)
+		err = actions.ValidateUserChoice(playerAction)
+
+		if err == nil {
+			break
+		} else {
+			PrintInvalidData()
+		}
+	}
 	return
 }
 
